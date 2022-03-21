@@ -35,6 +35,7 @@ public class Bubble extends JLabel implements Moveable {
 		this.player = player;
 		initObject();
 		initSetting();
+		initThread();
 	}
 	
 	private void initObject() {
@@ -56,20 +57,64 @@ public class Bubble extends JLabel implements Moveable {
 		
 		state = 0; // 물방울 상태
 	}
+	
+	private void initThread() {
+		 // 플레이어의 쓰레드는 대각선으로 올라가는 동작을 위해 right와 up 각각 스레드가 필요하지만, 버블은 쓰레드가 하나만 필요하다.
+		new Thread(() -> {
+			if (player.getPlayerWay() == PlayerWay.LEFT) {
+				left();
+			}
+			else {
+				right();
+			}
+		}).start();
+	}
 
 	@Override
 	public void left() {
-		
+		left = true;
+		for (int i=0; i<400; i++) {
+			x--;
+			setLocation(x, y);
+			
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		up();
 	}
 
 	@Override
 	public void right() {
-		
+		right = true;
+		for (int i=0; i<400; i++) {
+			x++;
+			setLocation(x, y);
+			
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		up();
 	}
 
 	@Override
 	public void up() {
-		
+		up = true;
+		while (up) {
+			y--;
+			setLocation(x, y);
+			
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
