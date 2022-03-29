@@ -90,10 +90,12 @@ public class Bubble extends JLabel implements Moveable {
 				break;
 			}
 
-			if ((Math.abs(x - enemy.getX()) > 40 && Math.abs(x - enemy.getX()) < 60) && 
-					(Math.abs(y - enemy.getY()) > 0 && Math.abs(y - enemy.getY()) < 50)) {
+			if (Math.abs(x - enemy.getX()) <10 && (Math.abs(y - enemy.getY()) > 0 && Math.abs(y - enemy.getY()) < 50)) {
 				System.out.println("물방울이 적군과 충돌하였습니다.");
-				attack();
+				if (enemy.getState() == 0) {
+					attack();
+					break;
+				}
 			}
 			
 			try {
@@ -117,6 +119,14 @@ public class Bubble extends JLabel implements Moveable {
 				break;
 			}
 			
+			if (Math.abs(x - enemy.getX()) <10 && (Math.abs(y - enemy.getY()) > 0 && Math.abs(y - enemy.getY()) < 50)) {
+				System.out.println("물방울이 적군과 충돌하였습니다.");
+				if (enemy.getState() == 0) {
+					attack();
+					break;
+				}
+			}
+			
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
@@ -137,21 +147,33 @@ public class Bubble extends JLabel implements Moveable {
 				up = false;
 				break;
 			}
-			
+
 			try {
-				Thread.sleep(1);
+				if (state == 0) {
+					// 기본 물방울
+					Thread.sleep(1);
+				}
+				else {
+					// 적을 가둔 물방울
+					Thread.sleep(10);
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 		
-		clearBubble();
+		if (state == 0) {
+			clearBubble();
+		}
 	}
 	
 	@Override
 	public void attack() {
-		state = 1;
+		state = 1; // 물방울의 state
+		enemy.setState(1); // 적군의 state
 		setIcon(bubbled);
+		mContext.remove(enemy); // 메모리에서 사라지게 한다. (가비지 컬렉션이 즉시 일어나지 않는다.)
+		mContext.repaint(); // 화면 갱신
 	}
 	
 	private void clearBubble() {
