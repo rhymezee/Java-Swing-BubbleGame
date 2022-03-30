@@ -187,6 +187,7 @@ public class Bubble extends JLabel implements Moveable {
 			 * 
 			 * main을 가진 클래스 -> Context(모든 정보)를 가지고 있다.
 			 */
+			mContext.getPlayer().getBubbleList().remove(this);
 			mContext.remove(this); // BubbleFrame의 bubble이 메모리에서 소멸된다.
 			mContext.repaint(); // BubbleFrame에서 메모리에 없는 것들은 제외하고, 있는 것들만 다시 그린다.
 		} catch (InterruptedException e) {
@@ -201,6 +202,7 @@ public class Bubble extends JLabel implements Moveable {
 				up = false;
 				setIcon(bomb);
 				Thread.sleep(1000);
+				mContext.getPlayer().getBubbleList().remove(this);
 				mContext.remove(this);
 				mContext.repaint();
 			} catch (Exception e) {
